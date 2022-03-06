@@ -1,0 +1,68 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+@media screen and (max-width: 550px) {
+  html {
+    font-size: 20%;
+  }
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.bubble-sort-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 120rem;
+  margin-left: -8rem;
+  margin-top: 5rem;
+}
+
+.sort-body {
+  background-color: rgb(65, 56, 56);
+  width: 85rem;
+  height: 27rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.column {
+  width: 3.4rem;
+  background-color: rgb(252, 167, 10);
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+}
+
+.btn {
+  font-size: 1.6rem;
+  cursor: pointer;
+  width: 15rem;
+  height: 10rem;
+  background-color: rgb(243, 229, 229);
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px,
+    rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px,
+    rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+.btn:active {
+  transform: translateY(0.3rem);
+}
