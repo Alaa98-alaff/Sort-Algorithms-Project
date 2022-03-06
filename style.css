@@ -22,6 +22,7 @@ body {
 .main {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .bubble-sort-container {
@@ -65,4 +66,12 @@ body {
 
 .btn:active {
   transform: translateY(0.3rem);
+}
+
+.sort-all {
+  background-color: rgb(243, 191, 191);
+  position: absolute;
+  top: 31rem;
+  width: 10rem;
+  height: 7rem;
 }

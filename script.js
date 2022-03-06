@@ -4,9 +4,16 @@ const bubbleBody = document.querySelector(".bubble-body");
 const selectionBody = document.querySelector(".selection-body");
 const sortBubble = document.querySelector(".sort-bubble");
 const sortSelection = document.querySelector(".sort-selection");
+const sortAll = document.querySelector(".sort-all");
 
 sortBubble.addEventListener("click", bubbleSort);
 sortSelection.addEventListener("click", selectionSort);
+sortAll.addEventListener("click", handleSortAll);
+
+function handleSortAll() {
+  bubbleSort();
+  selectionSort();
+}
 
 function bubbleColumns(arr) {
   if (arr.length > 0) {
@@ -34,6 +41,7 @@ function selectionColumns(arr) {
 
 async function bubbleSort() {
   sortBubble.disabled = true;
+  sortAll.disabled = true;
 
   // make copy of the original array
   let arr = array.slice();
@@ -59,10 +67,13 @@ async function bubbleSort() {
   }
 
   sortBubble.disabled = false;
+  sortAll.disabled = false;
 }
 
 async function selectionSort() {
   sortSelection.disabled = true;
+  sortAll.disabled = true;
+
   // make copy of the original array
   let arr = array.slice();
 
@@ -86,6 +97,7 @@ async function selectionSort() {
     }
   }
   sortSelection.disabled = false;
+  sortAll.disabled = false;
 }
 
 function init() {
