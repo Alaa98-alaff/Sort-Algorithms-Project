@@ -1,3 +1,5 @@
+@import "./animations.css";
+
 * {
   padding: 0;
   margin: 0;
@@ -26,6 +28,7 @@ body {
 }
 
 .bubble-sort-container {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -36,7 +39,7 @@ body {
 
 .sort-body {
   background-color: rgb(65, 56, 56);
-  width: 85rem;
+  width: 100%;
   height: 27rem;
   display: flex;
   align-items: flex-end;
@@ -45,7 +48,7 @@ body {
 
 .column {
   width: 3.4rem;
-  background-color: rgb(252, 167, 10);
+  background-color: #fca70a;
   margin-right: 0.5rem;
   margin-left: 0.5rem;
   border-top-right-radius: 0.5rem;
@@ -74,4 +77,68 @@ body {
   top: 31rem;
   width: 10rem;
   height: 7rem;
+}
+
+.sort-container {
+  position: relative;
+  width: 85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-container {
+  position: absolute;
+  width: 100%;
+  height: 2rem;
+  background-color: red;
+  bottom: -2rem;
+
+  -ms-box-orient: horizontal;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+
+  align-items: center;
+  justify-content: space-around;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.marker {
+  width: 2rem;
+  height: 2rem;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background-color: rgb(163, 58, 58);
+  position: absolute;
+  bottom: -2rem;
+  z-index: 100;
+}
+
+.marker-placeholder:nth-child(1) {
+  order: 5;
+}
+.marker-placeholder:nth-child(2) {
+  order: 4;
+}
+
+.marker-placeholder:nth-child(3) {
+  order: 3;
+}
+.marker-placeholder:nth-child(4) {
+  order: 2;
+}
+.marker-placeholder:nth-child(5) {
+  order: 1;
+}
+
+.marker-active {
+  /* color: blue; */
+  order: 0;
 }
