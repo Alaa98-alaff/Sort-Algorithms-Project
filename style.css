@@ -87,11 +87,11 @@ body {
   justify-content: center;
 }
 
-.marker-container {
+.marker-container-bubble,
+.marker-container-selection {
   position: absolute;
   width: 100%;
   height: 2rem;
-  background-color: red;
   bottom: -2rem;
 
   -ms-box-orient: horizontal;
@@ -116,29 +116,4 @@ body {
   height: 2rem;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   background-color: rgb(163, 58, 58);
-  position: absolute;
-  bottom: -2rem;
-  z-index: 100;
-}
-
-.marker-placeholder:nth-child(1) {
-  order: 5;
-}
-.marker-placeholder:nth-child(2) {
-  order: 4;
-}
-
-.marker-placeholder:nth-child(3) {
-  order: 3;
-}
-.marker-placeholder:nth-child(4) {
-  order: 2;
-}
-.marker-placeholder:nth-child(5) {
-  order: 1;
-}
-
-.marker-active {
-  /* color: blue; */
-  order: 0;
 }

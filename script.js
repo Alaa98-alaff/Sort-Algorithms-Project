@@ -6,7 +6,12 @@ const sortBubble = document.querySelector(".sort-bubble");
 const sortSelection = document.querySelector(".sort-selection");
 const sortAll = document.querySelector(".sort-all");
 const markerBubble = document.querySelector(".bubble-marker");
-const markerSelection = document.querySelector(".selection-marker");
+const markerContainerBubble = document.querySelector(
+  ".marker-container-bubble"
+);
+const markerContainerSelection = document.querySelector(
+  ".marker-container-selection"
+);
 
 let markerPosition = 31.8;
 
@@ -14,50 +19,74 @@ sortBubble.addEventListener("click", bubbleSort);
 sortSelection.addEventListener("click", selectionSort);
 sortAll.addEventListener("click", handleSortAll);
 
-function handleSortAll() {
-  bubbleSort();
-  selectionSort();
-}
-
-function bubbleColumns(arr, currentColIndex) {
+function generateBubbleCol(arr, currentColIndex) {
   if (arr.length >= 0) {
     bubbleBody.innerHTML = "";
 
-    arr.map((el, index) => {
+    for (let i = 0; i < arr.length; i++) {
       const column = document.createElement("div");
       column.classList.add("column");
-      column.style.order = index + 1;
+      column.setAttribute("order", i);
 
       // for slow show
       if (currentColIndex >= 0) {
-        if (currentColIndex === index) {
+        if (currentColIndex === i) {
           column.style.background = "black";
         }
       }
 
-      column.style.height = `${el * 1.6}rem`;
+      column.style.height = `${arr[i] * 1.6}rem`;
       bubbleBody.appendChild(column);
-    });
+    }
   }
 }
 
-function selectionColumns(arr, currentColIndex) {
-  if (arr.length > 0) {
+function generateSelectionCol(arr, currentColIndex) {
+  if (arr.length >= 0) {
     selectionBody.innerHTML = "";
 
-    arr.map((el, index) => {
+    for (let i = 0; i < arr.length; i++) {
       const column = document.createElement("div");
       column.classList.add("column");
-      column.style.order = index + 1;
+      column.setAttribute("order", i);
 
       // for slow show
       if (currentColIndex >= 0) {
-        if (currentColIndex === index) {
+        if (currentColIndex === i) {
           column.style.background = "black";
         }
       }
-      column.style.height = `${el * 1.6}rem`;
+
+      column.style.height = `${arr[i] * 1.6}rem`;
       selectionBody.appendChild(column);
+    }
+  }
+}
+
+function generateMarker(arr, currentColIndex, sortType) {
+  if (arr.length >= 0 && sortType) {
+    let markerContainer;
+
+    if (sortType === "bubble") {
+      markerContainer = markerContainerBubble;
+    } else if (sortType === "selection") {
+      markerContainer = markerContainerSelection;
+    }
+
+    if (sortType) markerContainer.innerHTML = "";
+
+    arr.map((el, index) => {
+      const marker = document.createElement("div");
+      marker.classList.add("marker");
+      marker.setAttribute("order", index);
+      marker.style.opacity = 0;
+
+      if (currentColIndex >= 0) {
+        if (currentColIndex === index) {
+          marker.style.opacity = 1;
+        }
+      }
+      markerContainer.appendChild(marker);
     });
   }
 }
@@ -72,44 +101,30 @@ async function bubbleSort() {
   for (let i = arr.length; i > 0; i--) {
     let noSwaps = true;
 
-    for (let j = 0; j < i - 1; j++) {
-      await sleep(5000);
-      bubbleColumns(arr, j);
+    for (let j = 0; j < i; j++) {
+      await sleep(1000);
+      generateBubbleCol(arr, j);
+      generateMarker(arr, j, "bubble");
 
-      // handleMarkerPosition(markerPosition, "bubble");
-
-      if (arr[j] > arr[j + 1]) {
-        //SWAP!
-        let temp = arr[j];
-        arr[j] = arr[j + 1];
-        arr[j + 1] = temp;
-        noSwaps = false;
+      if (j < i - 1) {
+        if (arr[j] > arr[j + 1]) {
+          //SWAP!
+          let temp = arr[j];
+          arr[j] = arr[j + 1];
+          arr[j + 1] = temp;
+          noSwaps = false;
+        }
       }
     }
 
     if (noSwaps) {
-      // handleMarkerPosition(31.8, "bubble");
       break;
     }
-
-    // handleMarkerPosition(31.8, "bubble");
   }
 
   sortBubble.disabled = false;
   sortAll.disabled = false;
 }
-
-// const handleMarkerPosition = (position, sortType) => {
-//   if (sortType === "bubble") {
-//     markerPosition = position + 5;
-//     markerBubble.style.left = position + "rem";
-//   }
-
-//   if (sortType === "selection") {
-//     markerPosition = position + 5;
-//     markerSelection.style.left = position + "rem";
-//   }
-// };
 
 async function selectionSort() {
   sortSelection.disabled = true;
@@ -121,11 +136,10 @@ async function selectionSort() {
   for (let i = 0; i < arr.length; i++) {
     let lowest = i;
 
-    for (let j = i + 1; j < arr.length; j++) {
-      await sleep(100);
-      selectionColumns(arr, j);
-
-      // handleMarkerPosition(markerPosition, "selection");
+    for (let j = i + 1; j <= arr.length; j++) {
+      await sleep(500);
+      generateSelectionCol(arr, j - 1);
+      generateMarker(arr, j - 1, "selection");
 
       if (arr[lowest] > arr[j]) {
         lowest = j;
@@ -136,24 +150,25 @@ async function selectionSort() {
       let temp = arr[i];
       arr[i] = arr[lowest];
       arr[lowest] = temp;
-
-      // sort the columns
     }
-    // console.log(i);
-    // handleMarkerPosition(31.8, "selection");
   }
-  // handleMarkerPosition(31.8, "selection");
 
   sortSelection.disabled = false;
   sortAll.disabled = false;
 }
 
 function init() {
-  bubbleColumns(array);
-  selectionColumns(array);
+  generateBubbleCol(array);
+  generateSelectionCol(array);
+  generateMarker(array);
 }
 init();
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function handleSortAll() {
+  bubbleSort();
+  selectionSort();
 }
