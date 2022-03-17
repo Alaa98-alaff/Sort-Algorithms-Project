@@ -117,3 +117,16 @@ body {
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   background-color: rgb(163, 58, 58);
 }
+
+.btns-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 25rem;
+}
+
+.low-speed-bubble {
+  height: 5rem;
+  width: 5rem;
+  font-size: 1rem;
+}

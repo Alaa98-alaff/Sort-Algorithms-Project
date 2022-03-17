@@ -12,12 +12,20 @@ const markerContainerBubble = document.querySelector(
 const markerContainerSelection = document.querySelector(
   ".marker-container-selection"
 );
+const lowSpeedBubble = document.querySelector(".low-speed-bubble");
 
 sortBubble.addEventListener("click", bubbleSort);
 sortSelection.addEventListener("click", selectionSort);
 sortAll.addEventListener("click", handleSortAll);
+lowSpeedBubble.addEventListener("click", handleLowSpeedBubble);
 
 let bubbleColumns = [];
+let bubbleSortLowSpeed = false;
+
+function handleLowSpeedBubble() {
+  bubbleSortLowSpeed = true;
+  bubbleSort();
+}
 
 function generateColumn(arr) {
   for (let i = 0; i < arr.length; i++) {
@@ -33,23 +41,32 @@ function generateColumn(arr) {
   }
 }
 
-function sortBubbleColumns(columns, currentColIndex, arr) {
-  for (let i = 0; i < columns.length; i++) {
-    if (i === currentColIndex) {
-      columns[i].style.background = "red";
-    } else {
-      columns[i].style.background = "#fca70a";
-    }
-
-    for (let j = 0; j < columns.length; j++) {
-      if (j === currentColIndex && j < i) {
-        columns[j + 1].style.background = "black";
+function bubbleColumnColor(columns, currentColIndex, handle) {
+  if (handle === "set") {
+    for (let i = 0; i < columns.length; i++) {
+      if (i === currentColIndex) {
+        columns[i].style.background = "red";
+      } else {
+        columns[i].style.background = "#fca70a";
       }
+
+      for (let j = 0; j < columns.length; j++) {
+        if (j === currentColIndex && j < i) {
+          columns[j + 1].style.background = "black";
+        }
+      }
+    }
+  }
+
+  if (handle === "remove") {
+    for (let i = 0; i < columns.length; i++) {
+      columns[i].style.background = "#fca70a";
     }
   }
 }
 
-function swapCol(currentColIndex) {
+async function swapCol(currentColIndex) {
+  bubbleSortLowSpeed ? await sleep(600) : null;
   let temp = copyBubbleList[currentColIndex].style.order;
   copyBubbleList[currentColIndex].style.order =
     copyBubbleList[currentColIndex + 1].style.order;
@@ -58,6 +75,11 @@ function swapCol(currentColIndex) {
   let temp2 = copyBubbleList[currentColIndex];
   copyBubbleList[currentColIndex] = copyBubbleList[currentColIndex + 1];
   copyBubbleList[currentColIndex + 1] = temp2;
+
+  bubbleSortLowSpeed ? await sleep(200) : null;
+  bubbleSortLowSpeed
+    ? bubbleColumnColor(copyBubbleList, undefined, "remove")
+    : null;
 }
 
 function generateSelectionCol(arr, currentColIndex) {
@@ -113,6 +135,7 @@ function generateMarker(arr, currentColIndex, sortType) {
 async function bubbleSort() {
   sortBubble.disabled = true;
   sortAll.disabled = true;
+  lowSpeedBubble.disabled = true;
 
   // make copy of the original array
   let arr = array.slice();
@@ -121,8 +144,8 @@ async function bubbleSort() {
     let noSwaps = true;
 
     for (let j = 0; j < i; j++) {
-      await sleep(200);
-      // generateMarker(arr, j, "bubble");
+      bubbleSortLowSpeed ? await sleep(1000) : await sleep(100);
+      generateMarker(arr, j, "bubble");
 
       if (j < i - 1) {
         if (arr[j] > arr[j + 1]) {
@@ -134,9 +157,9 @@ async function bubbleSort() {
 
           swapCol(j);
         }
-      }
 
-      // sortBubbleColumns(bubbleColumns, j, arr);
+        bubbleSortLowSpeed ? bubbleColumnColor(copyBubbleList, j, "set") : null;
+      }
     }
 
     if (noSwaps) {
@@ -146,6 +169,7 @@ async function bubbleSort() {
 
   sortBubble.disabled = false;
   sortAll.disabled = false;
+  lowSpeedBubble.disabled = false;
 }
 
 async function selectionSort() {
