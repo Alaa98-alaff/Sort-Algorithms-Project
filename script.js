@@ -12,22 +12,31 @@ const markerContainerBubble = document.querySelector(
 const markerContainerSelection = document.querySelector(
   ".marker-container-selection"
 );
-const lowSpeedBubble = document.querySelector(".low-speed-bubble");
+const lowSpeedBubbleBtn = document.querySelector(".low-speed-bubble");
+const lowSpeedSelectionBtn = document.querySelector(".low-speed-selection");
 
 sortBubble.addEventListener("click", bubbleSort);
 sortSelection.addEventListener("click", selectionSort);
 sortAll.addEventListener("click", handleSortAll);
-lowSpeedBubble.addEventListener("click", handleLowSpeedBubble);
+lowSpeedBubbleBtn.addEventListener("click", handleLowSpeedBubble);
+lowSpeedSelectionBtn.addEventListener("click", handleLowSpeedSelection);
 
 let bubbleColumns = [];
+let selectionColumns = [];
 let bubbleSortLowSpeed = false;
+let selectionSortLowSpeed = false;
 
 function handleLowSpeedBubble() {
   bubbleSortLowSpeed = true;
   bubbleSort();
 }
 
-function generateColumn(arr) {
+function handleLowSpeedSelection() {
+  selectionSortLowSpeed = true;
+  selectionSort();
+}
+
+function generateBubbleColumn(arr) {
   for (let i = 0; i < arr.length; i++) {
     const column = document.createElement("div");
     column.classList.add("column");
@@ -38,6 +47,20 @@ function generateColumn(arr) {
     bubbleColumns.push(column);
 
     bubbleBody.appendChild(column);
+  }
+}
+
+function generateSelectionColumn(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    const column = document.createElement("div");
+    column.classList.add("column");
+    column.setAttribute("order", i);
+    column.style.order = i;
+
+    column.style.height = `${arr[i] * 1.6}rem`;
+    selectionColumns.push(column);
+
+    selectionBody.appendChild(column);
   }
 }
 
@@ -80,6 +103,45 @@ async function swapCol(currentColIndex) {
   bubbleSortLowSpeed
     ? bubbleColumnColor(copyBubbleList, undefined, "remove")
     : null;
+}
+
+async function selectionColumnColor(
+  columns,
+  currentColIndex,
+  handle,
+  lowestValue
+) {
+  if (handle === "set") {
+    for (let i = 0; i < columns.length; i++) {
+      if (i === currentColIndex) {
+        columns[i].style.background = "red";
+        if (currentColIndex === lowestValue) await sleep(500);
+      } else {
+        columns[i].style.background = "#fca70a";
+      }
+
+      columns[lowestValue].style.background = "green";
+    }
+  }
+
+  if (handle === "remove") {
+    for (let i = 0; i < columns.length; i++) {
+      columns[i].style.background = "#fca70a";
+    }
+  }
+}
+
+async function swapColSelection(currentLoopIndex, lowestValue) {
+  selectionSortLowSpeed ? await sleep(600) : null;
+
+  let temp = copySelectionList[lowestValue].style.order;
+  copySelectionList[lowestValue].style.order =
+    copySelectionList[currentLoopIndex].style.order;
+  copySelectionList[currentLoopIndex].style.order = temp;
+
+  let temp2 = copySelectionList[lowestValue];
+  copySelectionList[lowestValue] = copySelectionList[currentLoopIndex];
+  copySelectionList[currentLoopIndex] = temp2;
 }
 
 function generateSelectionCol(arr, currentColIndex) {
@@ -135,7 +197,7 @@ function generateMarker(arr, currentColIndex, sortType) {
 async function bubbleSort() {
   sortBubble.disabled = true;
   sortAll.disabled = true;
-  lowSpeedBubble.disabled = true;
+  lowSpeedBubbleBtn.disabled = true;
 
   // make copy of the original array
   let arr = array.slice();
@@ -144,7 +206,7 @@ async function bubbleSort() {
     let noSwaps = true;
 
     for (let j = 0; j < i; j++) {
-      bubbleSortLowSpeed ? await sleep(1000) : await sleep(100);
+      bubbleSortLowSpeed ? await sleep(1000) : await sleep(50);
       generateMarker(arr, j, "bubble");
 
       if (j < i - 1) {
@@ -169,12 +231,13 @@ async function bubbleSort() {
 
   sortBubble.disabled = false;
   sortAll.disabled = false;
-  lowSpeedBubble.disabled = false;
+  lowSpeedBubbleBtn.disabled = false;
 }
 
 async function selectionSort() {
   sortSelection.disabled = true;
   sortAll.disabled = true;
+  lowSpeedSelectionBtn.disabled = true;
 
   // make copy of the original array
   let arr = array.slice();
@@ -183,9 +246,13 @@ async function selectionSort() {
     let lowest = i;
 
     for (let j = i + 1; j <= arr.length; j++) {
-      await sleep(500);
-      generateSelectionCol(arr, j - 1);
+      selectionSortLowSpeed ? await sleep(700) : await sleep(50);
+
       generateMarker(arr, j - 1, "selection");
+
+      selectionSortLowSpeed
+        ? await selectionColumnColor(copySelectionList, j - 1, "set", lowest)
+        : null;
 
       if (arr[lowest] > arr[j]) {
         lowest = j;
@@ -196,21 +263,25 @@ async function selectionSort() {
       let temp = arr[i];
       arr[i] = arr[lowest];
       arr[lowest] = temp;
+
+      swapColSelection(i, lowest);
     }
   }
 
   sortSelection.disabled = false;
   sortAll.disabled = false;
+  lowSpeedSelectionBtn.disabled = false;
 }
 
 function init() {
-  generateColumn(array);
-  generateSelectionCol(array);
+  generateBubbleColumn(array);
+  generateSelectionColumn(array);
   generateMarker(array);
 }
 init();
 
 let copyBubbleList = bubbleColumns.slice();
+let copySelectionList = selectionColumns.slice();
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));

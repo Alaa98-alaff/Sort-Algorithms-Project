@@ -125,7 +125,8 @@ body {
   width: 25rem;
 }
 
-.low-speed-bubble {
+.low-speed-bubble,
+.low-speed-selection {
   height: 5rem;
   width: 5rem;
   font-size: 1rem;
