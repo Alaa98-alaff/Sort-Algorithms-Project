@@ -25,6 +25,8 @@ let bubbleColumns = [];
 let selectionColumns = [];
 let bubbleSortLowSpeed = false;
 let selectionSortLowSpeed = false;
+let copyBubbleList;
+let copySelectionList;
 
 function handleLowSpeedBubble() {
   bubbleSortLowSpeed = true;
@@ -48,6 +50,7 @@ function generateBubbleColumn(arr) {
 
     bubbleBody.appendChild(column);
   }
+  copyBubbleList = bubbleColumns.slice();
 }
 
 function generateSelectionColumn(arr) {
@@ -62,6 +65,8 @@ function generateSelectionColumn(arr) {
 
     selectionBody.appendChild(column);
   }
+
+  copySelectionList = selectionColumns.slice();
 }
 
 function bubbleColumnColor(columns, currentColIndex, handle) {
@@ -90,6 +95,7 @@ function bubbleColumnColor(columns, currentColIndex, handle) {
 
 async function swapCol(currentColIndex) {
   bubbleSortLowSpeed ? await sleep(600) : null;
+
   let temp = copyBubbleList[currentColIndex].style.order;
   copyBubbleList[currentColIndex].style.order =
     copyBubbleList[currentColIndex + 1].style.order;
@@ -99,10 +105,10 @@ async function swapCol(currentColIndex) {
   copyBubbleList[currentColIndex] = copyBubbleList[currentColIndex + 1];
   copyBubbleList[currentColIndex + 1] = temp2;
 
-  bubbleSortLowSpeed ? await sleep(200) : null;
-  bubbleSortLowSpeed
-    ? bubbleColumnColor(copyBubbleList, undefined, "remove")
-    : null;
+  if (bubbleSortLowSpeed) {
+    await sleep(200);
+    bubbleColumnColor(copyBubbleList, undefined, "remove");
+  }
 }
 
 async function selectionColumnColor(
@@ -142,28 +148,6 @@ async function swapColSelection(currentLoopIndex, lowestValue) {
   let temp2 = copySelectionList[lowestValue];
   copySelectionList[lowestValue] = copySelectionList[currentLoopIndex];
   copySelectionList[currentLoopIndex] = temp2;
-}
-
-function generateSelectionCol(arr, currentColIndex) {
-  if (arr.length >= 0) {
-    selectionBody.innerHTML = "";
-
-    for (let i = 0; i < arr.length; i++) {
-      const column = document.createElement("div");
-      column.classList.add("column");
-      column.setAttribute("order", i);
-
-      // for slow show
-      if (currentColIndex >= 0) {
-        if (currentColIndex === i) {
-          column.style.background = "black";
-        }
-      }
-
-      column.style.height = `${arr[i] * 1.6}rem`;
-      selectionBody.appendChild(column);
-    }
-  }
 }
 
 function generateMarker(arr, currentColIndex, sortType) {
@@ -220,7 +204,7 @@ async function bubbleSort() {
           swapCol(j);
         }
 
-        bubbleSortLowSpeed ? bubbleColumnColor(copyBubbleList, j, "set") : null;
+        if (bubbleSortLowSpeed) bubbleColumnColor(copyBubbleList, j, "set");
       }
     }
 
@@ -279,9 +263,6 @@ function init() {
   generateMarker(array);
 }
 init();
-
-let copyBubbleList = bubbleColumns.slice();
-let copySelectionList = selectionColumns.slice();
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
