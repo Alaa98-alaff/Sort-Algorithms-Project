@@ -1,11 +1,13 @@
 import "./SortBtn.scss";
-import { array } from "../../helpers/variables";
+import { bArray } from "../../helpers/variables";
+import dispatch from "../../redux/dispatch";
+import * as actionTypes from "../../redux/actionTypes";
 
 function SortBtn() {
   // Bubble Sort
   const bubbleSort = async () => {
-    // make copy of the original array
-    let arr = array.slice();
+    // make copy of the original bArray
+    let arr = bArray.slice();
 
     for (let i = arr.length; i > 0; i--) {
       let noSwaps = true;
@@ -22,6 +24,7 @@ function SortBtn() {
             arr[j + 1] = temp;
             noSwaps = false;
             // swapCol(j);
+            dispatch(actionTypes.SWAP_COL_BUBBLE, j);
           }
 
           // if (bubbleSortLowSpeed) bubbleColumnColor(copyBubbleList, j, "set");
@@ -33,6 +36,23 @@ function SortBtn() {
       }
     }
   };
+
+  // let copyBubbleList = bArray.slice();
+
+  // async function swapCol(currentColIndex) {
+  //   bubbleSortLowSpeed ? await sleep(600) : null;
+
+  //   let temp2 = copyBubbleList[currentColIndex];
+  //   copyBubbleList[currentColIndex] = copyBubbleList[currentColIndex + 1];
+  //   copyBubbleList[currentColIndex + 1] = temp2;
+
+  //   if (bubbleSortLowSpeed) {
+  //     await sleep(200);
+  //     bubbleColumnColor(copyBubbleList, undefined, "remove");
+  //   }
+
+  //   dispatch(actionTypes.SWAP_COL_BUBBLE, j);
+  // }
 
   return (
     <button class="sort-bubble btn" onClick={bubbleSort}>

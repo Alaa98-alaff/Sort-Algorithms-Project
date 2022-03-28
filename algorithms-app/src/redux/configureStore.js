@@ -1,9 +1,10 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import Saga from "./saga/Saga";
 import createSagaMiddleware from "redux-saga";
+import bubbleSortReducer from "./reducers/bubbleSort";
 
 const combinedReducer = combineReducers({
-  //   itemsReducer: itemsReducer,
+  bubbleSortReducer: bubbleSortReducer,
 });
 
 const rootReducer = (state, action) => {

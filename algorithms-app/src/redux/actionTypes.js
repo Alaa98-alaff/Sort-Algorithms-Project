@@ -1,0 +1,3 @@
+//BUBBLE SORT
+export const BUBBLE_SORT = "BUBBLE_SORT";
+export const SWAP_COL_BUBBLE = "SWAP_COL_BUBBLE";

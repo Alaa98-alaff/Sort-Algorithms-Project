@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import "./SortBody.scss";
-import { array } from "../../helpers/variables";
+import { bArray } from "../../helpers/variables";
 
-function SortBody() {
+function SortBody({ ...props }) {
+  const { bubbleArr } = props;
+
   const generateBubbleColumn = (arr) => {
-    const column = array.map((item, i) => {
+    const column = arr.map((item, i) => {
       return (
         <div
           key={i}
@@ -47,10 +50,18 @@ function SortBody() {
 
   return (
     <div className="sort-container">
-      <div className="sort-body bubble-body">{generateBubbleColumn(array)}</div>
+      <div className="sort-body bubble-body">
+        {generateBubbleColumn(bArray)}
+      </div>
       <div className="marker-container-bubble"></div>
     </div>
   );
 }
 
-export default SortBody;
+const mapStateToProps = (state) => {
+  return {
+    bubbleArr: state.bubbleSortReducer.bubbleArr,
+  };
+};
+
+export default connect(mapStateToProps)(SortBody);
