@@ -1,5 +1,6 @@
 import "./SortBtn.scss";
-import { bArray } from "../../helpers/variables";
+import { bArray, bubbleSortLowSpeed } from "../../helpers/variables";
+import { sleep } from "../../helpers/sleep";
 import dispatch from "../../redux/dispatch";
 import * as actionTypes from "../../redux/actionTypes";
 
@@ -13,8 +14,13 @@ function SortBtn() {
       let noSwaps = true;
 
       for (let j = 0; j < i; j++) {
-        // bubbleSortLowSpeed ? await sleep(1000) : await sleep(50);
-        // generateMarker(arr, j, "bubble");
+        if (bubbleSortLowSpeed) {
+          await sleep(500);
+        } else {
+          await sleep(50);
+        }
+
+        dispatch(actionTypes.CURRENT_BUBBLE_COL, j);
 
         if (j < i - 1) {
           if (arr[j] > arr[j + 1]) {
@@ -23,8 +29,11 @@ function SortBtn() {
             arr[j] = arr[j + 1];
             arr[j + 1] = temp;
             noSwaps = false;
-            // swapCol(j);
-            dispatch(actionTypes.SWAP_COL_BUBBLE, j);
+
+            if (bubbleSortLowSpeed) {
+              await sleep(1000);
+            }
+            swapCol(j);
           }
 
           // if (bubbleSortLowSpeed) bubbleColumnColor(copyBubbleList, j, "set");
@@ -37,22 +46,20 @@ function SortBtn() {
     }
   };
 
-  // let copyBubbleList = bArray.slice();
+  let copyBubbleList = bArray.slice();
 
-  // async function swapCol(currentColIndex) {
-  //   bubbleSortLowSpeed ? await sleep(600) : null;
+  async function swapCol(currentColIndex) {
+    let temp2 = copyBubbleList[currentColIndex];
+    copyBubbleList[currentColIndex] = copyBubbleList[currentColIndex + 1];
+    copyBubbleList[currentColIndex + 1] = temp2;
 
-  //   let temp2 = copyBubbleList[currentColIndex];
-  //   copyBubbleList[currentColIndex] = copyBubbleList[currentColIndex + 1];
-  //   copyBubbleList[currentColIndex + 1] = temp2;
+    // if (bubbleSortLowSpeed) {
+    //   await sleep(200);
+    //   bubbleColumnColor(copyBubbleList, undefined, "remove");
+    // }
 
-  //   if (bubbleSortLowSpeed) {
-  //     await sleep(200);
-  //     bubbleColumnColor(copyBubbleList, undefined, "remove");
-  //   }
-
-  //   dispatch(actionTypes.SWAP_COL_BUBBLE, j);
-  // }
+    dispatch(actionTypes.SWAP_COL_BUBBLE, copyBubbleList);
+  }
 
   return (
     <button class="sort-bubble btn" onClick={bubbleSort}>
