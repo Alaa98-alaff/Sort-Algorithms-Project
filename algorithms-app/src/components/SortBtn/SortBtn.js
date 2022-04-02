@@ -1,10 +1,18 @@
+import { useEffect, useState } from "react";
 import "./SortBtn.scss";
-import { bArray, bubbleSortLowSpeed } from "../../helpers/variables";
+import { connect } from "react-redux";
+import { bArray } from "../../helpers/variables";
 import { sleep } from "../../helpers/sleep";
 import dispatch from "../../redux/dispatch";
 import * as actionTypes from "../../redux/actionTypes";
 
-function SortBtn() {
+function SortBtn({ ...props }) {
+  const { bubbleSortLowSpeed } = props;
+
+  useEffect(() => {
+    if (bubbleSortLowSpeed) bubbleSort();
+  }, [bubbleSortLowSpeed]);
+
   // Bubble Sort
   const bubbleSort = async () => {
     // make copy of the original bArray
@@ -15,7 +23,7 @@ function SortBtn() {
 
       for (let j = 0; j < i; j++) {
         if (bubbleSortLowSpeed) {
-          await sleep(500);
+          await sleep(800);
         } else {
           await sleep(50);
         }
@@ -31,12 +39,10 @@ function SortBtn() {
             noSwaps = false;
 
             if (bubbleSortLowSpeed) {
-              await sleep(1000);
+              await sleep(500);
             }
             swapCol(j);
           }
-
-          // if (bubbleSortLowSpeed) bubbleColumnColor(copyBubbleList, j, "set");
         }
       }
 
@@ -53,19 +59,29 @@ function SortBtn() {
     copyBubbleList[currentColIndex] = copyBubbleList[currentColIndex + 1];
     copyBubbleList[currentColIndex + 1] = temp2;
 
-    // if (bubbleSortLowSpeed) {
-    //   await sleep(200);
-    //   bubbleColumnColor(copyBubbleList, undefined, "remove");
-    // }
-
     dispatch(actionTypes.SWAP_COL_BUBBLE, copyBubbleList);
   }
 
+  const handleLowSpeedsort = () => {
+    dispatch(actionTypes.LOW_SPEED_SORT, true);
+  };
+
   return (
-    <button class="sort-bubble btn" onClick={bubbleSort}>
-      Bubble Sort
-    </button>
+    <>
+      <button class="sort-bubble btn" onClick={bubbleSort}>
+        Bubble Sort
+      </button>
+      <button onClick={handleLowSpeedsort} class="low-speed-bubble btn">
+        X.25 speed
+      </button>
+    </>
   );
 }
 
-export default SortBtn;
+const mapStateToProps = (state) => {
+  return {
+    bubbleSortLowSpeed: state.bubbleSortReducer.bubbleSortLowSpeed,
+  };
+};
+
+export default connect(mapStateToProps)(SortBtn);

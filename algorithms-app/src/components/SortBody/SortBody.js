@@ -4,7 +4,7 @@ import "./SortBody.scss";
 import { bArray } from "../../helpers/variables";
 
 function SortBody({ ...props }) {
-  const { bubbleArr, currentSortingCol } = props;
+  const { bubbleArr, currentSortingCol, bubbleSortLowSpeed } = props;
 
   useEffect(() => {
     generateBubbleColumn(bubbleArr);
@@ -21,7 +21,15 @@ function SortBody({ ...props }) {
           key={i}
           order={i}
           className="column"
-          style={{ height: item + "rem" }}
+          style={
+            bubbleSortLowSpeed && currentSortingCol !== null
+              ? currentSortingCol === i
+                ? { background: "red", height: item + "rem" }
+                : currentSortingCol + 1 === i
+                ? { background: "black", height: item + "rem" }
+                : { background: "#fca70a", height: item + "rem" }
+              : { height: item + "rem" }
+          }
         ></div>
       );
     });
@@ -61,6 +69,7 @@ const mapStateToProps = (state) => {
   return {
     bubbleArr: state.bubbleSortReducer.bubbleArr,
     currentSortingCol: state.bubbleSortReducer.currentSortingCol,
+    bubbleSortLowSpeed: state.bubbleSortReducer.bubbleSortLowSpeed,
   };
 };
 

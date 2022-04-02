@@ -4,6 +4,7 @@ import { bArray } from "../../helpers/variables";
 const initialState = {
   bubbleArr: bArray,
   currentSortingCol: null,
+  bubbleSortLowSpeed: false,
 };
 
 const bubbleSortReducer = (state = initialState, action) => {
@@ -18,6 +19,11 @@ const bubbleSortReducer = (state = initialState, action) => {
     return {
       ...state,
       currentSortingCol: payload,
+    };
+  } else if (type === actionTypes.LOW_SPEED_SORT) {
+    return {
+      ...state,
+      bubbleSortLowSpeed: payload,
     };
   } else {
     return state;
