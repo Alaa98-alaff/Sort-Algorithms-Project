@@ -24,3 +24,8 @@ body {
   justify-content: center;
   position: relative;
 }
+
+.sorts-container {
+  display: flex;
+  flex-direction: column;
+}

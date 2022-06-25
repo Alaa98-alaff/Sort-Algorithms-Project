@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import "./SortBody.scss";
+import "./BubbleSortBody.scss";
 import { bArray } from "../../helpers/variables";
 import { generateBubbleColumn } from "../../helpers/generateColumns";
 

@@ -11,6 +11,7 @@ const bubbleSortReducer = (state = initialState, action) => {
   let { type, payload } = action;
 
   if (type === actionTypes.SWAP_COL_BUBBLE) {
+    console.log(payload);
     return {
       ...state,
       bubbleArr: Object.assign([], payload),

@@ -1,6 +1,6 @@
 import React from "react";
-import "./BubbleSort.scss";
-import SortBody from "../SortBody/SortBody";
+import "./BubbleContainer.scss";
+import SortBody from "../BubbleSortBody/BubbleSortBody";
 import SortBtn from "../SortBtn/SortBtn";
 
 function BubbleSort() {
@@ -8,7 +8,7 @@ function BubbleSort() {
     <>
       <div class="bubble-sort-container">
         <div class="btns-container">
-          <SortBtn></SortBtn>
+          <SortBtn type={"Bubble"}></SortBtn>
         </div>
         <SortBody></SortBody>
       </div>

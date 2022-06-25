@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import Saga from "./saga/Saga";
 import createSagaMiddleware from "redux-saga";
-import bubbleSortReducer from "./reducers/bubbleSort";
+import bubbleSortReducer from "./reducers/bubbleReducer";
 
 const combinedReducer = combineReducers({
   bubbleSortReducer: bubbleSortReducer,
