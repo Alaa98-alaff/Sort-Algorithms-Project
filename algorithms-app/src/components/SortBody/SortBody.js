@@ -2,39 +2,18 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import "./SortBody.scss";
 import { bArray } from "../../helpers/variables";
+import { generateBubbleColumn } from "../../helpers/generateColumns";
 
 function SortBody({ ...props }) {
   const { bubbleArr, currentSortingCol, bubbleSortLowSpeed } = props;
 
   useEffect(() => {
-    generateBubbleColumn(bubbleArr);
+    generateBubbleColumn(bubbleArr, bubbleSortLowSpeed, currentSortingCol);
   }, [bubbleArr]);
 
   useEffect(() => {
     generateMarker(bubbleArr, currentSortingCol, "bubble");
   }, [currentSortingCol]);
-
-  const generateBubbleColumn = (arr) => {
-    const column = arr.map((item, i) => {
-      return (
-        <div
-          key={i}
-          order={i}
-          className="column"
-          style={
-            bubbleSortLowSpeed && currentSortingCol !== null
-              ? currentSortingCol === i
-                ? { background: "red", height: item + "rem" }
-                : currentSortingCol + 1 === i
-                ? { background: "black", height: item + "rem" }
-                : { background: "#fca70a", height: item + "rem" }
-              : { height: item + "rem" }
-          }
-        ></div>
-      );
-    });
-    return column;
-  };
 
   function generateMarker(arr, currentColIndex) {
     if (arr.length >= 0) {
@@ -56,7 +35,7 @@ function SortBody({ ...props }) {
   return (
     <div className="sort-container">
       <div className="sort-body bubble-body">
-        {generateBubbleColumn(bubbleArr)}
+        {generateBubbleColumn(bubbleArr, bubbleSortLowSpeed, currentSortingCol)}
       </div>
       <div className="marker-container-bubble">
         {generateMarker(bArray, currentSortingCol)}
